@@ -52,3 +52,25 @@ http://localhost/docs
 
 ### CI/CD Pipeline
 GitHub Actions tests each API Endpoint after each code commit, ensuring each feature works as expected prior to deployment on the EC2 virtual machine.
+
+### TODO
+- JWT Authentication
+- Prometheus implementation
+
+
+### Helpful Commands
+
+**Start EC2 instance**
+```bash
+aws ec2 start-instances --instance-ids $(aws ec2 describe-instances --filters "Name=tag:Name,Values=task-api-server" --query 'Reservations[0].Instances[0].InstanceId' --output text)
+```
+
+**Stop EC2 instance**
+```bash
+aws ec2 stop-instances --instance-ids $(aws ec2 describe-instances --filters "Name=tag:Name,Values=task-api-server" --query 'Reservations[0].Instances[0].InstanceId' --output text)
+```
+
+**Get EC2 public IP**
+```bash
+aws ec2 describe-instances --filters "Name=tag:Name,Values=task-api-server" --query 'Reservations[0].Instances[0].PublicIpAddress' --output text
+```
