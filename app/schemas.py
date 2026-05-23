@@ -1,34 +1,28 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from typing import Optional
 
 class TaskCreate(BaseModel):
     title: str
 
 class TaskResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
     id: int
     title: str
     completed: bool
 
-    class Config:
-        from_attributes = True
-
 class TaskUpdate(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
     title: Optional[str] = None
     completed: Optional[bool] = None
-
-    class Config:
-        from_attributes = True
 
 class UserCreate(BaseModel):
     username: str
     password: str
 
 class UserResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
     id: int
     username: str
-
-    class Config:
-        from_attributes = True
 
 class Token(BaseModel):
     access_token: str
