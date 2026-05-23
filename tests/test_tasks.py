@@ -45,6 +45,6 @@ def test_update_task(auth_headers):
 def test_delete_task(auth_headers):
     create = client.post("/tasks", json={"title": "Delete me"}, headers=auth_headers)
     task_id = create.json()["id"]
-    client.delete(f"/tasks/{task_id}")
+    client.delete(f"/tasks/{task_id}", headers=auth_headers)
     response = client.get(f"/tasks/{task_id}", headers=auth_headers)
     assert response.status_code == 404
