@@ -54,6 +54,7 @@ http://localhost/docs
 GitHub Actions tests each API Endpoint after each code commit, ensuring each feature works as expected prior to deployment on the EC2 virtual machine.
 
 ### TODO
-- JWT Authentication
-- Prometheus implementation
+- ~~JWT Authentication~~ Done
+- Prometheus, Grafana implementation
+- Swap Nginx for Traefik, improved scalability, cloud-native, works seamlessly with Docker (Docker-native config, configures automatically)
 - Frontend
