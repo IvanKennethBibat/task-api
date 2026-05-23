@@ -7,8 +7,8 @@ client = TestClient(app)
 
 @pytest.fixture(scope="module")
 def auth_headers():
-    client.post("/register", json={"username": "testuser", "password": "testpassword"})
-    response = client.post("/login", data={"username": "testuser", "password": "testpassword"})
+    client.post("/register", json={"username": "testuser", "password": "TestPassword!"})
+    response = client.post("/login", data={"username": "testuser", "password": "TestPassword!"})
     token = response.json()["access_token"]
     return {"Authorization": f"Bearer {token}"}
 
