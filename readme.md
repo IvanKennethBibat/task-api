@@ -6,7 +6,7 @@ Nginx implemented, acting as a reverse proxy, routing traffic to the API while k
 
 ### Architecture
 Online Traffic -> Nginx (Port 80) -> FastAPI (Port 8000) -> PostgreSQL (Port 5432)
-- **Nginx**: Reverse Proxy, routes traffic to the API, keeping the database and API server private.
+- ~~**Nginx**~~ **Traefik**: Reverse Proxy, routes traffic to the API, keeping the database and API server private.
 - **FastAPI**: Handles HTTP requests and business logic, for asynchrous support, automated API documentation, and speed.
 - **PostgreSQL**: Data Persistence.
 - **Docker**: For containerising the database and application.
@@ -16,7 +16,7 @@ Online Traffic -> Nginx (Port 80) -> FastAPI (Port 8000) -> PostgreSQL (Port 543
 - **PostgreSQL**: The persistent database for storing data from requests.
 - **SQLAlchemy**: An Object-Relational-Mapper (ORM), used for managing database requests, and mapping Python objects to database tables.
 - **Docker**: Containerises the application and databases, removing dependency issues, improving reproducibility.
-- **Nginx**: Acts as a middleman between public traffic and the API keeping the database and API server private.
+- ~~**Nginx**~~ **Traefik**: Acts as a middleman between public traffic and the API keeping the database and API server private.
 - **AWS EC2**: Virtual machine used for online app deployment.
 - **GitHub Actions**: Workflow CI/CD pipeline automation tool, ensuring all pushed code is functional before deployment.
 
@@ -55,6 +55,7 @@ GitHub Actions tests each API Endpoint after each code commit, ensuring each fea
 
 ### TODO
 - ~~JWT Authentication~~ Done
-- Prometheus, Grafana implementation
-- Swap Nginx for Traefik, improved scalability, cloud-native, works seamlessly with Docker (Docker-native config, configures automatically)
+- ~~Prometheus, Grafana implementation~~ Done
+- ~~Swap Nginx for Traefik, improved scalability, cloud-native, works seamlessly with Docker (Docker-native config, configures automatically)~~ Added socket proxy by tecnativa to control access to the docker socket as it is a security issue mounting directly. Also considering wollomatic's socket proxy ([github](https://github.com/wollomatic/socket-proxy))
+- Terraform
 - Frontend
