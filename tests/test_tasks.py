@@ -15,7 +15,7 @@ def auth_headers():
 
 def test_create_task(auth_headers):
     response = client.post("/tasks", json={"title": "Test task"}, headers=auth_headers)
-    assert response.status_code == 200
+    assert response.status_code == 201
     assert response.json()["title"] == "Test task"
     assert response.json()["completed"] == False
 
