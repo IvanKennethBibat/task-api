@@ -11,7 +11,6 @@ class TaskResponse(BaseModel):
     completed: bool
 
 class TaskUpdate(BaseModel):
-    model_config = ConfigDict(from_attributes=True)
     title: Optional[str] = None
     completed: Optional[bool] = None
 

@@ -92,3 +92,24 @@ jobs:
             git pull origin main
             sudo docker-compose down
             sudo docker-compose up --build -d
+
+  stop-ec2:
+    needs: [start-ec2, deploy]
+    runs-on: ubuntu-latest
+    if: always()
+
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Stop EC2 instance
+        run: |
+          INSTANCE_ID=$(aws ec2 describe-instances \
+            --filters "Name=tag:Name,Values=task-api-server" \
+            --query 'Reservations[0].Instances[0].InstanceId' \
+            --output text)
+          aws ec2 stop-instances --instance-ids $INSTANCE_ID
