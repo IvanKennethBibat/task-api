@@ -1,5 +1,8 @@
 # Task API
 
+### Problem Statement
+A production-style REST API which incorporates data security, AWS cloud deployment, monitoring, and CI/CD workflows through GitHub Actions, preventing broken code commits, real-time error diagnosis, and sensitive data exposure.
+
 ### Description 
 REST API built using FastAPI and PostgreSQL, using Docker to containerise the application, then deployed on AWS EC2.
 Traefik acting as a reverse proxy, routing traffic to the API.
@@ -60,7 +63,7 @@ docker compose up -d
 - **API**: http://localhost/docs
 - **Grafana**: http://localhost/grafana
 - **Prometheus**: http://localhost/prometheus
-- **Traefik**: http://localhost:8080
+- **Traefik**: http://localhost:80
 
 ### CI/CD Pipeline
 GitHub Actions tests each API Endpoint after each code commit, ensuring each feature works as expected prior to deployment on the EC2 virtual machine.
