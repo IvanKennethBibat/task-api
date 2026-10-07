@@ -1,3 +1,6 @@
 .env
 venv/
 *.pkg
+.terraform/
+*.tfstate
+*.tfstate.*
