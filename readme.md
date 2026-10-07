@@ -8,16 +8,42 @@ REST API built using FastAPI and PostgreSQL, using Docker to containerise the ap
 Traefik acting as a reverse proxy, routing traffic to the API.
 
 ### Architecture
-```
-Online Traffic -> Traefik (Port 80) -> FastAPI (Port 8000) -> PostgreSQL (Port 5432)
 
-                                                           -> Prometheus (Scrape /metrics) 
-                                                           -> Grafana (Visualises scraped data)
+
+## Map
+```text
+task-api
+├── .github/
+│   └── workflows/
+│       ├── deploy.yml            # EC2 deployment automation
+│       └── pull_requests.yml     # CI validation for pull requests
+├── app/
+│   ├── __init__.py              # package marker
+│   ├── auth.py                  # JWT + password utilities
+│   ├── database.py              # SQLAlchemy engine, session, DB config
+│   ├── main.py                  # FastAPI app bootstrap and health routes
+│   ├── models.py                # User and Task ORM models
+│   ├── routes.py                # authentication endpoints
+│   ├── schemas.py               # Pydantic request/response models
+│   └── user_routes.py           # task CRUD API routes
+├── terraform/
+│   ├── main.tf                  # Terraform AWS configuration
+│   ├── variable.tf              # Terraform variables
+│   ├── outputs.tf               # Terraform output values
+│   └── terraform.tfvars         # environment-specific tf values
+├── tests/
+│   └── test_tasks.py            # API test suite
+├── .env                         # local runtime environment variables
+├── .gitignore
+├── Dockerfile                   # container image for the FastAPI app
+├── docker-compose.yml           # multi-service local deployment stack
+├── main.tf                      # root Terraform config
+├── prometheus.yml               # Prometheus scrape configuration
+├── readme.md                    # project overview and setup docs
+├── requirements.txt             # Python dependencies
+├── .pytest_cache/               # local pytest cache (generated)
+└── venv/                        # local virtual environment
 ```
-- **Traefik**: Reverse Proxy, routes traffic to the API, keeping the database and API server private.
-- **FastAPI**: Handles HTTP requests and business logic, for asynchrous support, automated API documentation, and speed.
-- **PostgreSQL**: Data Persistence.
-- **Docker**: For containerising the database and application.
 
 ### Tech Stack
 - **FastAPI**: Acts as the pipeline between the traffic requests and the database.
