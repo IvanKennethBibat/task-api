@@ -1,9 +1,12 @@
 # Task API
 
 ### Problem Statement
-A production-style REST API which incorporates data security, AWS cloud deployment, monitoring, and CI/CD workflows through GitHub Actions, preventing broken code commits, real-time error diagnosis, and sensitive data exposure.
+Starting projects from scratch is slow and tedious. This project serves as a base template for future projects to accelerate the initial setup phase.
 
 ### Description 
+A production-style REST API which incorporates data security, AWS cloud deployment, monitoring, and CI/CD workflows through GitHub Actions, preventing broken code on deployment, real-time error diagnosis, and sensitive data exposure.
+
+
 REST API built using FastAPI and PostgreSQL, using Docker to containerise the application, then deployed on AWS EC2.
 Traefik acting as a reverse proxy, routing traffic to the API.
 
