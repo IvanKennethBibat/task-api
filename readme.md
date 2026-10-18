@@ -1,42 +1,11 @@
 # Task API
 
-A production-style reference deployment of a small REST API, built to be the starting point for my own projects. The example domain is a task list with user accounts; the parts worth reusing are everything around it: auth, migrations, observability, backups, CI, infrastructure as code and keyless deploys, all of which I can explain end to end.
+A production-style reference deployment of a small REST API, built to be the starting point for my own projects. The example domain is a task list with user accounts; the parts worth reusing are everything around it: auth, migrations, observability, backups, CI, infrastructure as code and keyless deploys.
 
 - **App**: FastAPI + PostgreSQL (SQLAlchemy, Alembic), argon2 password hashing, JWT auth, input limits, rate-limited login.
 - **Runtime**: one Docker Compose stack for dev and prod (Traefik, Prometheus, Grafana, scheduled backups), with environment differences kept in small overlays.
 - **Infrastructure**: Terraform for an ARM EC2 server, S3 backups bucket and least-privilege IAM, with no SSH and no secrets in state.
 - **Delivery**: GitHub Actions runs lint, tests, an image build and Terraform checks, then deploys `main` through SSM using OIDC, with a health check and one-run rollbacks.
-
-### Architecture
-Runtime, on one EC2 instance:
-```mermaid
-flowchart LR
-    client([Client]) -->|"HTTPS :443<br/>(DNS on Cloudflare)"| traefik
-    subgraph ec2 ["EC2 t4g.small: Docker Compose (prod overlay)"]
-        traefik["Traefik<br/>TLS, HTTP→HTTPS, rate limits"] --> api["FastAPI"]
-        api --> db[("PostgreSQL")]
-        migrate["migrate<br/>alembic upgrade, one-off"] --> db
-        backup["backup<br/>daily pg_dump"] --> db
-        prometheus["Prometheus"] -->|"scrapes /metrics"| api
-        grafana["Grafana"] --> prometheus
-    end
-    backup -->|upload| s3[("S3 backups<br/>30-day expiry")]
-    traefik -.->|"DNS-01 challenge"| cfapi["Cloudflare API"]
-    you([You]) -.->|"SSM port forward"| grafana
-```
-
-Delivery, from merge to running:
-```mermaid
-flowchart LR
-    merge([Merge to main]) --> ci["CI<br/>lint, tests, image build,<br/>terraform checks"]
-    ci -->|passes| deploy["Deploy workflow"]
-    deploy -->|"OIDC, no stored keys"| role["IAM deploy role"]
-    role -->|"ssm:SendCommand<br/>(deploy document only)"| server["EC2<br/>checkout SHA from main,<br/>render .env, compose up --wait"]
-    params[("SSM Parameter Store<br/>secrets")] --> server
-    deploy -->|"GET /ready"| health{"healthy?"}
-    health -->|no| rollback["Re-run Deploy with<br/>the previous SHA"]
-```
-`terraform apply`, run from your machine, creates the instance, bucket, IAM roles, deploy document and GitHub OIDC provider.
 
 ### Design decisions
 - **One instance running Compose, not ECS/EKS and RDS.** A `t4g.small` with a 20 GiB volume and a public IPv4 address costs roughly $20 a month on demand, and dev and prod run the same stack, so what works locally works on the server. The trade-offs are deliberate: one instance is a single point of failure, a deploy restarts containers (a few seconds of downtime), and the database lives on the instance's disk.
